@@ -7,9 +7,14 @@
 		</label>
 		<div id='menu'>
 			<nav> 		 
-				 <a href='/'><i class="fa fa fa-users" aria-hidden="true"></i>Accueil</a>
-				 <a href='/vider'><i class="fa fa-industry" aria-hidden="true"></i>Vider</a>
-				 <a href='/adresse'><i class="fa fa-graduation-cap" aria-hidden="true"></i>Adresse</a>
+				<a href='/'><i class="fa fa fa-users" aria-hidden="true"></i><%= __('Accueil') %></a>
+				<a href='/vider'><i class="fa fa-industry" aria-hidden="true"></i><%= __('Vider') %></a>
+				<a href='/adresse'><i class="fa fa-graduation-cap" aria-hidden="true"></i><%= __('Adresse') %></a>
+				<% if(getLocale() == 'fr') {%>
+					<a href='/en'>EN</a>
+				<%} else {%>
+					<a href='/fr'>FR</a>
+				<%}%>
 			</nav> 
 			<form class='recherche'  action='/adresse' name="recherche" id="recherche">
 			    <input type="text" name="recherche" 

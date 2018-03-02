@@ -5,14 +5,19 @@ const app = express();
 const bodyParser= require('body-parser');
 const MongoClient = require('mongodb').MongoClient; // le pilote MongoDB
 const ObjectID = require('mongodb').ObjectID;
+const cookieParser = require('cookie-parser');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 /* on associe le moteur de vue au module «ejs» */
 app.use(express.static('public'));
 
-
+const i18n = require("i18n");
+i18n.configure({ 
+   locales : ['fr', 'en'],
+   cookie : 'langueChoisie', 
+   directory : __dirname + '/locales' })
 /* Ajoute l'objet i18n à l'objet global «res» */
-
-
+app.use(i18n.init);
 
 let db // variable qui contiendra le lien sur la BD
 
@@ -35,14 +40,25 @@ Les routes
 ////////////////////////////////////////// Route /
 app.set('view engine', 'ejs'); // générateur de template
 
-
 //////////////////////////////////////////
 app.get('/', function (req, res) {
+	/* pour extraire l'ensemble des cookies */
+	 console.log('Cookies: ', req.cookies)
+	/* Pour récupérer la valeur d'un cookie spécifique « langueChoisie » */
+	 console.log('Cookies: ', req.cookies.langueChoisie)
 
- res.render('accueil.ejs')  
- 
+	res.render('accueil.ejs')  
   });
 
+
+app.get('/:locale(en|fr)',  (req, res) => {
+  console.log("req.params.local = " + req.params.locale)
+  res.cookie('langueChoisie', req.params.locale)
+  // on récupère le paramètre de l'url pour enregistrer la langue
+  res.setLocale(req.params.locale)
+  // on peut maintenant traduire
+  res.redirect(req.get('referer'))
+})
 
 
 //////////////////////////////////////////  Route Adresse
